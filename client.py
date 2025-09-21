@@ -20,11 +20,15 @@ try:
         file.write((message + '\n').encode('utf-8'))
 
         data = file.readline()
+        print('サーバーからの応答: ', data.decode('utf-8').rstrip('\n'))
+        
 
         if not data:
             print('サーバーが切断しました')
             break
-        print('サーバーからの応答: ', data.decode('utf-8').rstrip('\n'))
+
+except KeyboardInterrupt:
+    print("\nKeyboardInterruptを受け取りました。")
 
 finally:
     print('ソケットを閉じます')
