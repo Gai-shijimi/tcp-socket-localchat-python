@@ -18,7 +18,7 @@ while True:
     connection, client_address = sock.accept()
     print('クライアントと接続しました。')
     try :
-        print('接続先', client_address)
+        print('接続先: {}'.format(client_address))
 
         file = connection.makefile('rwb', buffering=0)
         for line in file:
