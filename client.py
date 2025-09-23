@@ -1,9 +1,16 @@
 import socket
 import sys
+import signal
+
+def handler(signum, _):
+    print(f"{signum}を受け取りました。終了します。")
+    sys.exit(0)
+
 
 sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 server_address = '/tmp/socket_file'
 print('{}に接続します'.format(server_address))
+
 
 try:
     sock.connect(server_address)
@@ -13,6 +20,7 @@ except socket.error as err:
 
 file = sock.makefile('rwb', buffering=0)
 
+signal.signal(signal.SIGINT, handler)
 
 try:
     while True:
@@ -26,9 +34,6 @@ try:
         if not data:
             print('サーバーが切断しました')
             break
-
-except KeyboardInterrupt:
-    print("\nKeyboardInterruptを受け取りました。")
 
 finally:
     print('ソケットを閉じます')

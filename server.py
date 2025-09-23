@@ -1,5 +1,12 @@
 import socket
 import os
+import signal
+import sys
+
+def handler(signum, _):
+    print(f"{signum}を受け取りました。")
+    sys.exit(0)
+    
 
 
 server_address = '/tmp/socket_file'
@@ -14,6 +21,7 @@ print('サーバーを起動しています....{}'.format(server_address))
 sock.bind(server_address)
 sock.listen(1)
 
+signal.signal(signal.SIGINT, handler)
 
 try:
 
@@ -32,8 +40,6 @@ try:
             print("現在の接続を閉じます。")
             connection.close()
 
-except KeyboardInterrupt:
-    print("\nKeyboardInterruptを受け取りました。サーバーを終了します。")
 
 finally:
     sock.close()
