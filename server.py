@@ -8,7 +8,6 @@ def handler(signum, _):
     sys.exit(0)
     
 
-
 server_address = '/tmp/socket_file'
 
 try:
@@ -24,21 +23,20 @@ sock.listen(1)
 signal.signal(signal.SIGINT, handler)
 
 try:
+    connection, _ = sock.accept()
+    print('クライアントと接続しました。')
+    
+    try:
+        file = connection.makefile('rwb', buffering=0)
+        for line in file:
+            msg = line.rstrip(b'\n').decode('utf-8')
+            print('受信:', msg)
+            response = ('サーバーからの応答:'+msg + '\n').encode('utf-8')
+            file.write(response)
 
-    while True:
-        connection, _ = sock.accept()
-        print('クライアントと接続しました。')
-        try:
-            file = connection.makefile('rwb', buffering=0)
-            for line in file:
-                msg = line.rstrip(b'\n').decode('utf-8')
-                print('受信:', msg)
-                response = ('サーバーからの応答:'+msg + '\n').encode('utf-8')
-                file.write(response)
-
-        finally:
-            print("現在の接続を閉じます。")
-            connection.close()
+    finally:
+        print("現在の接続を閉じます。")
+        connection.close()
 
 
 finally:
